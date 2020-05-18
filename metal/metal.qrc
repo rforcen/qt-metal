@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file>voronoi.metal</file>
+    </qresource>
+</RCC>
