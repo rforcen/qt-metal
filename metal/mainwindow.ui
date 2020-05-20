@@ -28,7 +28,27 @@
      <number>0</number>
     </property>
     <item>
-     <widget class="MetalWidget" name="widget" native="true"/>
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <item>
+       <widget class="QSlider" name="n_points">
+        <property name="minimum">
+         <number>1000</number>
+        </property>
+        <property name="maximum">
+         <number>2500</number>
+        </property>
+        <property name="value">
+         <number>1500</number>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="MetalDeviceWidget" name="widget" native="true"/>
+      </item>
+     </layout>
     </item>
    </layout>
   </widget>
@@ -46,9 +66,9 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>MetalWidget</class>
+   <class>MetalDeviceWidget</class>
    <extends>QWidget</extends>
-   <header>metalwidget.h</header>
+   <header location="global">metaldevicewidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

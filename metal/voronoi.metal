@@ -2,6 +2,14 @@
 //  Voronoi.metal
 //
 
+/*
+rm -f Voronoi.metallib *air
+xcrun -sdk macosx metal -c *metal
+xcrun -sdk macosx metallib *air -o Voronoi.metallib
+rm -f *air
+echo 'generated Voronoi.metallib'
+*/
+
 #include <metal_stdlib>
 using namespace metal;
 

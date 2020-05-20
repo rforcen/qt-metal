@@ -20,17 +20,17 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
     main.cpp \
     mainwindow.cpp \
-    metalwidget.cpp \
-    mtlpp/MetalDevice.mm \
-    mtlpp/mtlpp.mm
+    metal.mm \
+    metaldevicewidget.cpp \
+    MetalDevice.mm
 
 HEADERS += \
     VM_Vect.h \
     mainwindow.h \
     metal.h \
-    metalwidget.h \
-    mtlpp/MetalDevice.h \
-    mtlpp/mtlpp.hpp \
+    metal_pp.h \
+    metaldevicewidget.h \
+    MetalDevice.h \
     vm.h
 
 FORMS += \

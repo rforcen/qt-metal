@@ -1,7 +1,7 @@
 #include "metalwidget.h"
 
 MetalWidget::MetalWidget(QWidget* parent) : QWidget(parent) {
-  metal = new Metal(":/voronoi.metal");
+  metal = new Metal;
   metal->compile_func("Voronoi");
   metal->compile_func("setPointBox");
 
@@ -30,7 +30,7 @@ void MetalWidget::paint(QPainter& p) {
 
   // color tiles
   metal->set_func("Voronoi");
-  pic.set_buffer(0); // kernel func parameters(pic, points, n_points)
+  pic.set_buffer(0);  // kernel func parameters(pic, points, n_points)
   points.set_buffer(1);
   metal->set_int(n_points, 2);
 

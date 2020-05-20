@@ -1,0 +1,7 @@
+#!/usr/local/bin/bash
+
+rm -f $1.metallib *air
+xcrun -sdk macosx metal -c *metal
+xcrun -sdk macosx metallib *air -o $1.metallib
+rm -f *air
+echo "generated" $1".metallib"

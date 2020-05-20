@@ -19,36 +19,51 @@ class VM_Vect : public VM {
   ~VM_Vect() { free(); }
 
   void resize(int new_size) {
-    if (new_size != size && new_size != 0) {
+    if (new_size != _size && new_size != 0) {
       int nbs = new_size * sizeof(T);
       T* _d = (T*)VM::calloc(nbs);
       if (d) {
-        memcpy(_d, d, min(size_bytes, nbs));
+        memcpy(_d, d, min(_size_bytes, nbs));
         free();
       }
       d = _d;
-      size = new_size;
-      size_bytes = nbs;
+      _size = new_size;
+      _size_bytes = nbs;
     }
   }
 
   inline T& operator[](int index) {  // index mutator
-    assert(index >= 0 && index < size && "VM_Vect: index error");
+    assert(index >= 0 && index < _size && "VM_Vect: index error");
     return d[index];
   }
 
   inline const T& operator[](int index) const {  // index accessor
-    assert(index >= 0 && index < size && "Vect: index error");
+    assert(index >= 0 && index < _size && "Vect: index error");
     return d[index];
   };
 
-  void create_buffer(Metal* metal) {
-    this->metal = metal;
-    buffer = metal->create_buffer(d, size_bytes);
+  void create_buffer(metal_device* metal_device) {
+    this->metal_device = metal_device;
+    metal_buffer = metal_device->createBuffer(d, _size_bytes);
   }
-  void set_buffer(int index) { metal->set_buffer(buffer, index); }
 
-  T* data() { return d; }
+  void create_copy_buffer(metal_device* metal_device) {
+    this->metal_device = metal_device;
+    metal_buffer = metal_device->copyBuffer(d, _size_bytes);
+  }
+
+  void set_buffer(int index) {
+    if (metal_device) metal_device->setBufferParam(metal_buffer, index);
+  }
+
+  inline T* data() { return d; }
+
+  inline int length() { return _size_bytes; }
+  inline int size() { return _size;}
+
+  void copy_buffer() {
+    if (metal_device) metal_device->copyContentsOn(d, metal_buffer, _size_bytes);
+  }
 
  private:
   void alloc(int size) {
@@ -56,25 +71,26 @@ class VM_Vect : public VM {
     alloc(size);
   }
   void free() {
-    if (d != nullptr && size != 0) VM::free(d, size_bytes);
+    if (d != nullptr && _size != 0) VM::free(d, _size_bytes);
     d = nullptr;
-    size = size_bytes = 0;
+    _size = _size_bytes = 0;
   }
   void copy(VM_Vect& cpy) {  // deep copy
     free();
-    d = VM::calloc(cpy.size_bytes);
-    memcpy(d, cpy.d, cpy.size_bytes);
-    size = cpy.size;
-    size_bytes = cpy.size_bytes;
-    buffer = cpy.buffer;
-    metal = cpy.metal;
+    d = VM::calloc(cpy._size_bytes);
+    memcpy(d, cpy.d, cpy._size_bytes);
+    _size = cpy._size;
+    _size_bytes = cpy._size_bytes;
+    metal_buffer = cpy.metal_buffer;
+    metal_device = cpy.metal_device;
   }
   void move(VM_Vect& mv) { memcpy(this, &mv, sizeof(VM_Vect)); }
   int min(int a, int b) { return a < b ? a : b; }
 
   T* d = nullptr;
-  int size = 0, size_bytes = 0;
+  int _size = 0, _size_bytes = 0;
 
-  mtlpp::Buffer buffer;
-  Metal* metal = nullptr;
+  void* metal_buffer = nullptr;
+
+  metal_device* metal_device = nullptr;
 };
