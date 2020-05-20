@@ -1,36 +1,47 @@
 # qt-metal
 qt metal c++ interface
+
 use apple metal resources in a convenient qt wrapper, 
-includes a qwidget promotion full working example implementing voronoi algorithm,
 
-metal programs are coded in resource files:
+virtual memory manager is implemented in a VM_Vect vector alike class,
 
- metal = new Metal(":/voronoi.metal");
- metal->compile_func("Voronoi");
- metal->compile_func("setPointBox");
-
-VM_Vect uses virtual memory to store interface objects avoiding memory leaks
-
-  // pic, points, colors
+ // pic, points, colors
   VM_Vect<point> points;
   VM_Vect<color> pic;
 
-metal buffers are integrated in VM_Vect :
+compiled default.metallib file should be copied to the same executable folder
+
+includes a qwidget promotion full working example implementing voronoi algorithm,
+
  // pic buffer -> w x h
   pic.resize(w * h);
-  pic.create_buffer(metal);
-  
+
   // color tiles
-  metal->set_func("Voronoi");
-  pic.set_buffer(0); // kernel func parameters(pic, points, n_points)
+  metal->compileFunc("Voronoi");
+
+  pic.create_copy_buffer(metal);
+  points.create_copy_buffer(metal);
+
+  pic.set_buffer(0);
   points.set_buffer(1);
-  metal->set_int(n_points, 2);
+  metal->set_int(points.size(), 2);
+
+  metal->runThreadsWidth(w, h);
+
+  // points
+  metal->compileFunc("setPointBox");
+
+  pic.create_copy_buffer(metal);
+  points.create_copy_buffer(metal);
+
+  pic.set_buffer(0);
+  points.set_buffer(1);
+  metal->set_int(w, 2);
+
+  metal->runThreadsWidth(points.size(), 1);
+
 
 i've also added a metal.xml sytax highlighting file.
 obviously this is only for macos.
 
-uses mtlpp:
-/*
- * Copyright 2016-2017 Nikolay Aleksiev. All rights reserved.
- * License: https://github.com/naleksiev/mtlpp/blob/master/LICENSE
- */
+inspired in Nikolay's mtlpp:  https://github.com/naleksiev/mtlpp
