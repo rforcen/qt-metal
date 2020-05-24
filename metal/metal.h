@@ -1,5 +1,6 @@
 #pragma once
 
+#include <simd/simd.h>
 #include <vm.h>
 
 #include <QFile>
@@ -8,9 +9,22 @@
 #include <QVector>
 #include <iterator>
 
+typedef uint32_t color;
+typedef simd_float4 range;
+typedef struct {
+  int x, y;
+  color color;
+  int _align_to_uint4;
+} point;
+
+class Parameter;
+
 class metal_device {
  public:
   metal_device();
+  bool load_library(QString lib_name);
+  bool load_library_from_data(QByteArray data);
+  bool load_metallib(QString file_name);
   void compileFunc(QString func);
   void prepFunc(QString func);
   void genEncoder(), run();
@@ -31,8 +45,12 @@ class metal_device {
   void setBufferParam(void* buffer, uint index);
   void setBytesParam(void* data, uint length, int index);
   void setIntParam(void* data, int index);
+  void setFloatParam(void* data, int index);
 
   void set_int(int i, int index) { setIntParam(&i, index); }
+  void set_float(float f, int index) { setFloatParam(&f, index); }
+
+  void call(QString func, int w, int h, QList<Parameter> pl);
 
  private:
   void* dev = nullptr;

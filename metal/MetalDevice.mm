@@ -23,10 +23,24 @@
 + (instancetype)init {
   MetalDevice* md = [[super alloc] init];
   md->device = MTLCreateSystemDefaultDevice();
-//  md->library = [md->device newDefaultLibrary];
-  md->library = [md->device newLibraryWithFile:@"default.metallib" error:nil];
+  md->library = [md->device newDefaultLibrary];  // copy default.metallib to Resources
+  //  md->library = [md->device newLibraryWithFile:@"default.metallib" error:nil];
   md->funcDict = [[NSMutableDictionary alloc] init];
   return md;
+}
+
+- (bool)load_library:(NSString*)lib_name {
+  library = [device newLibraryWithFile:[lib_name stringByAppendingString:@".metallib"] error:nil];
+  return library == nil ? false : true;
+}
+
+- (bool)load_library_from_data:(void*)data length:(int)length {
+  library = [device
+      newLibraryWithData:dispatch_data_create(
+                             data, length,
+                             dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), nil)
+                   error:nil];
+  return library == nil ? false : true;
 }
 
 - (NSUInteger)sz2Page:(NSUInteger)sz szof:(NSUInteger)szof {  // convert to page frame

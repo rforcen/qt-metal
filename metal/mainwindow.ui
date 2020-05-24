@@ -30,23 +30,107 @@
     <item>
      <layout class="QVBoxLayout" name="verticalLayout">
       <item>
-       <widget class="QSlider" name="n_points">
-        <property name="minimum">
-         <number>1000</number>
-        </property>
-        <property name="maximum">
-         <number>2500</number>
-        </property>
-        <property name="value">
-         <number>1500</number>
-        </property>
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
+       <widget class="QLineEdit" name="zExpression">
+        <property name="text">
+         <string>z^4</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="MetalDeviceWidget" name="widget" native="true"/>
+       <widget class="QTabWidget" name="tabWidget">
+        <property name="currentIndex">
+         <number>0</number>
+        </property>
+        <widget class="QWidget" name="tab_voronoi">
+         <attribute name="title">
+          <string>voronoi</string>
+         </attribute>
+         <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="0">
+          <property name="leftMargin">
+           <number>5</number>
+          </property>
+          <property name="topMargin">
+           <number>5</number>
+          </property>
+          <property name="rightMargin">
+           <number>5</number>
+          </property>
+          <property name="bottomMargin">
+           <number>5</number>
+          </property>
+          <item>
+           <layout class="QVBoxLayout" name="verticalLayout_2">
+            <property name="leftMargin">
+             <number>0</number>
+            </property>
+            <item>
+             <widget class="QSlider" name="n_points">
+              <property name="minimum">
+               <number>1000</number>
+              </property>
+              <property name="maximum">
+               <number>2500</number>
+              </property>
+              <property name="value">
+               <number>1500</number>
+              </property>
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="MetalDeviceWidget" name="widget_voronoi" native="true"/>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </widget>
+        <widget class="QWidget" name="tab_mandelbrot">
+         <attribute name="title">
+          <string>mandelbrot</string>
+         </attribute>
+         <layout class="QHBoxLayout" name="horizontalLayout_3">
+          <property name="leftMargin">
+           <number>5</number>
+          </property>
+          <property name="topMargin">
+           <number>5</number>
+          </property>
+          <property name="rightMargin">
+           <number>5</number>
+          </property>
+          <property name="bottomMargin">
+           <number>5</number>
+          </property>
+          <item>
+           <widget class="MandelbrotWidget" name="widget_mandelbrot" native="true"/>
+          </item>
+         </layout>
+        </widget>
+        <widget class="QWidget" name="tab_domaincoloring">
+         <attribute name="title">
+          <string>domain coloring</string>
+         </attribute>
+         <layout class="QHBoxLayout" name="horizontalLayout_4">
+          <property name="leftMargin">
+           <number>5</number>
+          </property>
+          <property name="topMargin">
+           <number>5</number>
+          </property>
+          <property name="rightMargin">
+           <number>5</number>
+          </property>
+          <property name="bottomMargin">
+           <number>5</number>
+          </property>
+          <item>
+           <widget class="DomainColoringWidget" name="widget_domaincoloring" native="true"/>
+          </item>
+         </layout>
+        </widget>
+       </widget>
       </item>
      </layout>
     </item>
@@ -66,9 +150,21 @@
  </widget>
  <customwidgets>
   <customwidget>
+   <class>MandelbrotWidget</class>
+   <extends>QWidget</extends>
+   <header location="global">mandelbrotwidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
    <class>MetalDeviceWidget</class>
    <extends>QWidget</extends>
    <header location="global">metaldevicewidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>DomainColoringWidget</class>
+   <extends>QWidget</extends>
+   <header location="global">domaincoloringwidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

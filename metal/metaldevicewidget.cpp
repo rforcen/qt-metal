@@ -1,57 +1,32 @@
 #include "metaldevicewidget.h"
 
-MetalDeviceWidget::MetalDeviceWidget(QWidget* parent) : QWidget(parent) {
-  metal = new metal_device;
+#include <memory>
 
+MetalDeviceWidget::MetalDeviceWidget(QWidget* parent) : QWidget(parent) {
   points.resize(1500);
 }
 
 void MetalDeviceWidget::paintEvent(QPaintEvent*) {
   QPainter p(this);
-  time.start();
+  _c->start();
 
   paint(p);
 
-  lap = time.elapsed();
+  _c->finished();
 }
 
 void MetalDeviceWidget::paint(QPainter& p) {
-  w = p.device()->width();
-  h = p.device()->height();
+  get_geo(p);
 
-  // generate random points
-  for (int i = 0; i < points.size(); i++)
-    points[i] = point{
-        (rand() % (w - 10)) + 5, (rand() % (h - 10)) + 5,
-        makeColor(rand() % 200 + 50, rand() % 200 + 55, rand() % 200 + 50), 0};
+  gen_points();  // new set as h,w may have changed
+  fit_points();
 
   // pic buffer -> w x h
-  pic.resize(w * h);
+  VM_Vect<color> pic(wh());
 
-  // color tiles
-  metal->compileFunc("Voronoi");
-
-  pic.create_copy_buffer(metal);
-  points.create_copy_buffer(metal);
-
-  pic.set_buffer(0);
-  points.set_buffer(1);
-  metal->set_int(points.size(), 2);
-
-  metal->runThreadsWidth(w, h);
-
-  // points
-  metal->compileFunc("setPointBox");
-
-  pic.create_copy_buffer(metal);
-  points.create_copy_buffer(metal);
-
-  pic.set_buffer(0);
-  points.set_buffer(1);
-  metal->set_int(w, 2);
-
-  metal->runThreadsWidth(points.size(), 1);
+  _c->metal->call("Voronoi", w, h, {&pic, &points, points.size()});
+  _c->metal->call("setPointBox", points.size(), 1, {&pic, &points, w});
 
   // pic is available now -> draw
-  p.drawImage(0, 0, QImage((uchar*)pic.data(), w, h, QImage::Format_ARGB32));
+  p.drawImage(0, 0, QImage(pic.udata(), w, h, QImage::Format_ARGB32));
 }

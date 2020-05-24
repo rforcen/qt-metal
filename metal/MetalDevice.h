@@ -33,6 +33,8 @@
 }
 
 + (instancetype)init;
+- (bool)load_library:(NSString *)lib_name;
+- (bool)load_library_from_data:(void *)data length:(int)length;
 - (void)compileFunc:(NSString *)func;
 - (void)prepFunc:(NSString *)func;
 - (void)genEncoder;
@@ -56,6 +58,5 @@
 + (NSTimeInterval)timeIt:(void (^)(void))block;
 
 @end
-
 
 #endif /* MBEContext_h */

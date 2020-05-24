@@ -24,6 +24,7 @@ class MainWindow : public QMainWindow {
 
 private slots:
   void on_n_points_sliderReleased();
+  void on_zExpression_returnPressed();
 
 private:
   Ui::MainWindow *ui;

@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file>metal source/qtmetal.metallib</file>
+    </qresource>
+</RCC>
